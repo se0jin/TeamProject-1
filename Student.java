@@ -88,13 +88,13 @@ class Student {
         return totalCredit; 
     }
 
-     public void printStudentInfo() {
+    public void printStudentInfo() {
         System.out.println("--------------------------------------------------");
         System.out.printf("학번: %s\t이름: %s\n", this.studentId, this.name);
         
         System.out.println("\n[과목별 상세 성적]");
         for (int i = 0; i < this.subjectCount; i++) {
-            System.out.printf(" - %s : %c\n", this.subjectNames[i], this.letterGrades[i]);
+            System.out.printf(" - %s : %s\n", this.subjectNames[i], this.letterGrades[i]);
         }
         
         System.out.println("\n[전체 성적 처리 결과]");
