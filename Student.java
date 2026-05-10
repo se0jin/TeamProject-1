@@ -1,8 +1,8 @@
 /**
- * student 클래스의 설명을 작성하세요.
+ * student 학생 1명의 데이터와 계산하는 클래스.
  *
- * @author (작성자 이름)
- * @version (버전 번호 또는 작성한 날짜)
+ * @author (장서윤, 유서진, 이지헌)
+ * @version (2026.05.07)
  */
 class Student {
     private String studentId;
@@ -101,7 +101,7 @@ class Student {
         System.out.println("--------------------------------------------------");
         System.out.printf("학번: %s\t이름: %s\t학년: %d학년\n", this.studentId, this.name, this.year);
         
-        System.out.print("\n[과목별 상세 성적]\n");
+        System.out.print("\n[과목별 성적]\n");
         for (int i = 0; i < this.subjectCount; i++) {
             System.out.printf(" - %s : %s\n", this.subjectNames[i], this.letterGrades[i]);
         }
