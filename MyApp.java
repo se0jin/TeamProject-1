@@ -4,8 +4,10 @@ import java.util.InputMismatchException;
  * MyApp 성적 처리 프로그램.
  * 1.학생 수 입력받기
  * 2.입력 받은 학생 정보 반복 입력
- * 3.정렬 방식 선택
- * 4.전체 성적표 출력
+ * 3. 메뉴 선택
+ *    3-1. 전체 성적표 출력 (정렬 선택 + 동점자 공동순위)
+ *    3-2. 과목별 학생 성적 조회
+ *    3-3. 종료 성적표 출력
  *
  * @author (장서윤, 유서진, 이지헌)
  * @version (2026.05.07)
@@ -67,18 +69,18 @@ public class MyApp {
                     }
                 }
 
-                String[] subjectNames = new String[subjectCount];
-                int[] scores = new int[subjectCount];
-                int[] credits = new int[subjectCount];
+                String[] subjectName = new String[subjectCount];
+                int[] score = new int[subjectCount];
+                int[] credit = new int[subjectCount];
                 boolean isInputValid = true;
 
                 for (int j = 0; j < subjectCount; j++) {
                     System.out.print((j + 1) + "번째 과목의 [과목명] [점수] [이수학점]을 띄어쓰기로 구분하여 입력하세요 (예: 자바프로그래밍 95 3): ");
-                    subjectNames[j] = scanner.next(); 
-                    scores[j] = scanner.nextInt();    
-                    credits[j] = scanner.nextInt();   
+                    subjectName[j] = scanner.next(); 
+                    score[j] = scanner.nextInt();    
+                    credit[j] = scanner.nextInt();   
 
-                    if (scores[j] < 0 || scores[j] > 100 || credits[j] <= 0) {
+                    if (score[j] < 0 || score[j] > 100 || credit[j] <= 0) {
                         System.out.println("점수는 0~100 사이, 이수학점은 1 이상이어야 합니다. 처음부터 다시 입력하세요.");
                         isInputValid = false;
                         break;
@@ -91,7 +93,7 @@ public class MyApp {
                 }
 
                 students[i] = new Student(studentId, name, year, subjectCount, 
-                    subjectNames, scores, credits);
+                    subjectName, score, credit);
 
             } catch (InputMismatchException e) {
                 System.out.println("숫자만 입력하세요.");
@@ -150,23 +152,23 @@ public class MyApp {
                         }
                     }
                 }
-                int[] ranks = new int[students.length];
+                int[] rank = new int[students.length];
 
                 for (int i = 0; i < students.length; i++) {
                     if (i == 0) {
-                        ranks[i] = 1; // 첫번째는 무조건 1등
+                        rank[i] = 1; // 첫번째는 무조건 1등
                     } else {
                         if (students[i].getAveragePoint() == students[i-1].getAveragePoint()) {
-                            ranks[i] = ranks[i-1]; // 평점 같으면 같은 순위
+                            rank[i] = rank[i-1]; // 평점 같으면 같은 순위
                         } else {
-                            ranks[i] = i + 1; // 다르면 현재 인덱스+1 이 순위
+                            rank[i] = i + 1; // 다르면 현재 인덱스+1 이 순위
                         }
                     }
                 }
 
                 System.out.println("\n=== 전체 학생 성적표 ===");
                 for (int i = 0; i < students.length; i++) {
-                    System.out.println("석차: " + ranks[i] + "/" + students.length);
+                    System.out.println("석차: " + rank[i] + "/" + students.length);
                     students[i].printStudentInfo();
                 }
 

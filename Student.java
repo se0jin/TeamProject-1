@@ -9,9 +9,9 @@ class Student {
     private String name;
     private int year;
     private int subjectCount; //과목수
-    private String[] subjectNames; //과목이름
-    private int[] scores; //점수
-    private int[] credits; //과목별 학점
+    private String[] subjectName; //과목이름
+    private int[] score; //점수
+    private int[] credit; //과목별 학점
     private double[] points; //과목별 평점
     private String[] letterGrades; // 학점 배열
     
@@ -22,52 +22,52 @@ class Student {
         this.name = name;
         this.year = year;
         this.subjectCount = subjectCount;
-        this.subjectNames = subjectNames;
-        this.scores = scores;
-        this.credits = credits;
+        this.subjectName = subjectNames;
+        this.score = scores;
+        this.credit = credits;
         this.points = new double[subjectCount];
         this.letterGrades = new String [subjectCount];
-        calculateGPA(); 
+        calcAvgPoint(); 
     }
 
-    private double con(int scores) {
-        if (scores >= 95) return 4.5;      // A+
-        else if (scores >= 90) return 4.0; // A
-        else if (scores >= 85) return 3.5; // B+
-        else if (scores >= 80) return 3.0; // B
-        else if (scores >= 75) return 2.5; // C+
-        else if (scores >= 70) return 2.0; // C
-        else if (scores >= 65) return 1.5; // D+
-        else if (scores >= 60) return 1.0; // D
+    private double scoreToPoint(int score) {
+        if (score >= 95) return 4.5;      // A+
+        else if (score >= 90) return 4.0; // A
+        else if (score >= 85) return 3.5; // B+
+        else if (score >= 80) return 3.0; // B
+        else if (score >= 75) return 2.5; // C+
+        else if (score >= 70) return 2.0; // C
+        else if (score >= 65) return 1.5; // D+
+        else if (score >= 60) return 1.0; // D
         else return 0.0;              // F
     }
 
-    private String determineLetterGrade(int scores) {
-        if (scores >= 95) return "A+";      
-        else if (scores >= 90) return "A"; 
-        else if (scores >= 85) return "B+"; 
-        else if (scores >= 80) return "B"; 
-        else if (scores >= 75) return "C+"; 
-        else if (scores >= 70) return "C"; 
-        else if (scores >= 65) return "D+"; 
-        else if (scores >= 60) return "D"; 
+    private String scoreToGrade(int score) {
+        if (score >= 95) return "A+";      
+        else if (score >= 90) return "A"; 
+        else if (score >= 85) return "B+"; 
+        else if (score >= 80) return "B"; 
+        else if (score >= 75) return "C+"; 
+        else if (score >= 70) return "C"; 
+        else if (score >= 65) return "D+"; 
+        else if (score >= 60) return "D"; 
         else return "F";
     }
     
-    private void calculateGPA() {
+    private void calcAvgPoint() {
         this.totalCredit = 0;
-        double sumOfGradePoints = 0.0;
+        double sumOfGradePoint = 0.0;
 
         for (int i = 0; i < this.subjectCount; i++) {
-            this.points[i] = con(this.scores[i]);
-            this.letterGrades[i] = determineLetterGrade(this.scores[i]); 
+            this.points[i] = scoreToPoint(this.score[i]);
+            this.letterGrades[i] = scoreToGrade(this.score[i]); 
             
-            this.totalCredit += this.credits[i];
-            sumOfGradePoints += (this.points[i] * this.credits[i]);
+            this.totalCredit += this.credit[i];
+            sumOfGradePoint += (this.points[i] * this.credit[i]);
         }
 
         if (this.totalCredit > 0) {
-            this.averagePoint = sumOfGradePoints / this.totalCredit;
+            this.averagePoint = sumOfGradePoint / this.totalCredit;
         } else {
             this.averagePoint = 0.0;
         }
@@ -103,7 +103,7 @@ class Student {
         
         System.out.print("\n[과목별 성적]\n");
         for (int i = 0; i < this.subjectCount; i++) {
-            System.out.printf(" - %s : %s\n", this.subjectNames[i], this.letterGrades[i]);
+            System.out.printf(" - %s : %s\n", this.subjectName[i], this.letterGrades[i]);
         }
         
         System.out.print("\n[전체 성적 처리 결과]\n");
@@ -114,9 +114,9 @@ class Student {
 
     public boolean printSingleSubjectInfo(String searchSubject) {
         for (int i = 0; i < this.subjectCount; i++) {
-            if (this.subjectNames[i].equals(searchSubject)) {
+            if (this.subjectName[i].equals(searchSubject)) {
                 System.out.printf(" - 학번: %s\t이름: %s\t학년: %d학년\t[%s] 학점: %s\n", 
-                        this.studentId, this.name, this.year, this.subjectNames[i], this.letterGrades[i]);
+                        this.studentId, this.name, this.year, this.subjectName[i], this.letterGrades[i]);
                 return true; 
             }
         }
