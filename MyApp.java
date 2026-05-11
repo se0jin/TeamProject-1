@@ -150,13 +150,27 @@ public class MyApp {
                         }
                     }
                 }
+                int[] ranks = new int[students.length];
+
+                for (int i = 0; i < students.length; i++) {
+                    if (i == 0) {
+                        ranks[i] = 1; // 첫번째는 무조건 1등
+                    } else {
+                        if (students[i].getAveragePoint() == students[i-1].getAveragePoint()) {
+                            ranks[i] = ranks[i-1]; // 평점 같으면 같은 순위
+                        } else {
+                            ranks[i] = i + 1; // 다르면 현재 인덱스+1 이 순위
+                        }
+                    }
+                }
 
                 System.out.println("\n=== 전체 학생 성적표 ===");
-                for (Student s : students) {
-                    s.printStudentInfo();
+                for (int i = 0; i < students.length; i++) {
+                    System.out.println("석차: " + ranks[i] + "/" + students.length);
+                    students[i].printStudentInfo();
                 }
-                
-                } else if (menuOption == 2) {
+
+            } else if (menuOption == 2) {
                 System.out.print("조회할 과목명을 입력하세요: ");
                 String searchSubject = scanner.next();
 
@@ -172,8 +186,8 @@ public class MyApp {
                 if (!isFound) {
                     System.out.println("해당 과목을 수강한 학생이 없습니다.");
                 }
-                
-                } else if (menuOption == 3) {
+
+            } else if (menuOption == 3) {
                 System.out.println("프로그램을 종료합니다.");
                 scanner.close();
                 break;
