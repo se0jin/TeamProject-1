@@ -91,7 +91,7 @@ public class MyApp {
                 }
 
                 students[i] = new Student(studentId, name, year, subjectCount, 
-                                            subjectNames, scores, credits);
+                    subjectNames, scores, credits);
 
             } catch (InputMismatchException e) {
                 System.out.println("숫자만 입력하세요.");
@@ -101,54 +101,83 @@ public class MyApp {
             }
         }
 
-        System.out.println("\n=================================");
-        System.out.println("완료 되었습니다.");
-        System.out.println("정렬 방식을 선택하세요.");
-        System.out.println("1. 이름순 (가나다순)");
-        System.out.println("2. 성적순 (평점 높은 순)");
-        System.out.println("3. 학번순 (오름차순)");
-        System.out.print(">> 선택: ");
+        while (true) {
+            System.out.println("\n=================================");
+            System.out.println("1. 전체 성적표 출력");
+            System.out.println("2. 과목별 학생 성적 조회");
+            System.out.println("3. 프로그램 종료");
+            System.out.print(">> 선택: ");
 
-        int sortOption = 1;
-        try {
-            sortOption = scanner.nextInt();
-        } catch (InputMismatchException e) {
-            System.out.println("잘못된 입력으로 기본값인 '이름순'으로 정렬합니다.");
-            scanner.next();
-        }
+            int menuOption = scanner.nextInt();
 
-        for (int i = 0; i < students.length - 1; i++) {
-            for (int j = 0; j < students.length - 1 - i; j++) {
-                boolean shouldSwap = false;
+            if (menuOption == 1) {
+                System.out.println("\n정렬 방식을 선택하세요.");
+                System.out.println("1. 이름순 (가나다순)");
+                System.out.println("2. 성적순 (평점 높은 순)");
+                System.out.println("3. 학번순 (오름차순)");
+                System.out.print(">> 선택: ");
 
-                switch(sortOption) {
-                    case 1: 
-                        if (students[j].getName().compareTo(students[j+1].getName()) > 0) shouldSwap = true;
-                        break;
-                    case 2: 
-                        if (students[j].getAveragePoint() < students[j+1].getAveragePoint()) shouldSwap = true;
-                        break;
-                    case 3: 
-                        if (students[j].getStudentId().compareTo(students[j+1].getStudentId()) > 0) shouldSwap = true;
-                        break;
-                    default:
-                        if (students[j].getName().compareTo(students[j+1].getName()) > 0) shouldSwap = true;
+                int sortOption = 1;
+                try {
+                    sortOption = scanner.nextInt();
+                } catch (InputMismatchException e) {
+                    System.out.println("잘못된 입력으로 기본값인 '이름순'으로 정렬합니다.");
+                    scanner.next();
                 }
 
-                if (shouldSwap) {
-                    Student temp = students[j];
-                    students[j] = students[j+1];
-                    students[j+1] = temp;
+                for (int i = 0; i < students.length - 1; i++) {
+                    for (int j = 0; j < students.length - 1 - i; j++) {
+                        boolean shouldSwap = false;
+
+                        switch(sortOption) {
+                            case 1: 
+                                if (students[j].getName().compareTo(students[j+1].getName()) > 0) shouldSwap = true;
+                                break;
+                            case 2: 
+                                if (students[j].getAveragePoint() < students[j+1].getAveragePoint()) shouldSwap = true;
+                                break;
+                            case 3: 
+                                if (students[j].getStudentId().compareTo(students[j+1].getStudentId()) > 0) shouldSwap = true;
+                                break;
+                            default:
+                                if (students[j].getName().compareTo(students[j+1].getName()) > 0) shouldSwap = true;
+                        }
+
+                        if (shouldSwap) {
+                            Student temp = students[j];
+                            students[j] = students[j+1];
+                            students[j+1] = temp;
+                        }
+                    }
                 }
+
+                System.out.println("\n=== 전체 학생 성적표 ===");
+                for (Student s : students) {
+                    s.printStudentInfo();
+                }
+                
+                } else if (menuOption == 2) {
+                System.out.print("조회할 과목명을 입력하세요: ");
+                String searchSubject = scanner.next();
+
+                System.out.println("\n=== [" + searchSubject + "] 과목 수강 학생 성적 ===");
+                boolean isFound = false;
+
+                for (Student s : students) {
+                    if (s.printSingleSubjectInfo(searchSubject)) {
+                        isFound = true;
+                    }
+                }
+
+                if (!isFound) {
+                    System.out.println("해당 과목을 수강한 학생이 없습니다.");
+                }
+                
+                } else if (menuOption == 3) {
+                System.out.println("프로그램을 종료합니다.");
+                scanner.close();
+                break;
             }
         }
-
-        System.out.println("\n=== 전체 학생 성적표 ===");
-        for (Student s : students) {
-            s.printStudentInfo();
-        }
-
-        System.out.println("프로그램을 종료합니다.");
-        scanner.close();
     }
 }
