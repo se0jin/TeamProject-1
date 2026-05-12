@@ -15,7 +15,7 @@ import java.util.InputMismatchException;
 public class MyApp {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        int n = 0;
+        int n = 0;  
 
         System.out.print("처리할 학생 수를 입력하세요: ");
         while (true) {
@@ -61,9 +61,8 @@ public class MyApp {
                             System.out.println("과목 수는 1 이상이어야 합니다. 다시 입력하세요.");
                             continue;
                         }
-                        break; //while 탈출
+                        break; 
                     } catch (InputMismatchException e) {
-                        // 예외가 발생해도 바깥으로 튕기지 않고, 여기서 버퍼를 비운 뒤 과목 수만 다시 묻습니다.
                         System.out.println("문자가 입력되었습니다. 숫자만 다시 입력하세요.");
                         scanner.next(); 
                     }
@@ -93,7 +92,7 @@ public class MyApp {
                 }
 
                 students[i] = new Student(studentId, name, year, subjectCount, 
-                    subjectName, score, credit);
+                                            subjectName, score, credit);
 
             } catch (InputMismatchException e) {
                 System.out.println("숫자만 입력하세요.");

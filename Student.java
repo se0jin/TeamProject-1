@@ -13,24 +13,25 @@ class Student {
     private int[] score; //점수
     private int[] credit; //과목별 학점
     private double[] points; //과목별 평점
-    private String[] letterGrades; // 학점 배열
+    private String[] Grades; // 등급 배열
     
     private int totalCredit; //전체 이수 학점
     private double averagePoint; // 최종 평점평균
-    public Student(String studentId, String name, int year, int subjectCount, String[] subjectNames, int[] scores, int[] credits) {
+    public Student(String studentId, String name, int year, int subjectCount, 
+                    String[] subjectName, int[] score, int[] credit) {
         this.studentId = studentId;
         this.name = name;
         this.year = year;
         this.subjectCount = subjectCount;
-        this.subjectName = subjectNames;
-        this.score = scores;
-        this.credit = credits;
+        this.subjectName = subjectName;
+        this.score = score;
+        this.credit = credit;
         this.points = new double[subjectCount];
-        this.letterGrades = new String [subjectCount];
-        calcAvgPoint(); 
+        this.Grades = new String [subjectCount];
+        calcAvgPoint(); //평점.등급 계싼
     }
 
-    private double scoreToPoint(int score) {
+    private double scoreToPoint(int score) {  //점수>>평점 숫자로
         if (score >= 95) return 4.5;      // A+
         else if (score >= 90) return 4.0; // A
         else if (score >= 85) return 3.5; // B+
@@ -42,7 +43,7 @@ class Student {
         else return 0.0;              // F
     }
 
-    private String scoreToGrade(int score) {
+    private String scoreToGrade(int score) {  //점수>>등급 문자로
         if (score >= 95) return "A+";      
         else if (score >= 90) return "A"; 
         else if (score >= 85) return "B+"; 
@@ -60,14 +61,14 @@ class Student {
 
         for (int i = 0; i < this.subjectCount; i++) {
             this.points[i] = scoreToPoint(this.score[i]);
-            this.letterGrades[i] = scoreToGrade(this.score[i]); 
+            this.Grades[i] = scoreToGrade(this.score[i]); 
             
             this.totalCredit += this.credit[i];
-            sumOfGradePoint += (this.points[i] * this.credit[i]);
+            sumOfGradePoint += (this.points[i] * this.credit[i]); //ex) 4.5*3
         }
 
         if (this.totalCredit > 0) {
-            this.averagePoint = sumOfGradePoint / this.totalCredit;
+            this.averagePoint = sumOfGradePoint / this.totalCredit;  //최종 
         } else {
             this.averagePoint = 0.0;
         }
@@ -99,11 +100,12 @@ class Student {
 
     public void printStudentInfo() {
         System.out.println("--------------------------------------------------");
-        System.out.printf("학번: %s\t이름: %s\t학년: %d학년\n", this.studentId, this.name, this.year);
+        System.out.printf("학번: %s\t이름: %s\t학년: %d학년\n", 
+                            this.studentId, this.name, this.year);
         
         System.out.print("\n[과목별 성적]\n");
         for (int i = 0; i < this.subjectCount; i++) {
-            System.out.printf(" - %s : %s\n", this.subjectName[i], this.letterGrades[i]);
+            System.out.printf(" - %s : %s\n", this.subjectName[i], this.Grades[i]);
         }
         
         System.out.print("\n[전체 성적 처리 결과]\n");
@@ -112,11 +114,11 @@ class Student {
         System.out.println("--------------------------------------------------");
     }
 
-    public boolean printSingleSubjectInfo(String searchSubject) {
+    public boolean printSingleSubjectInfo(String searchSubject) { //과목조회
         for (int i = 0; i < this.subjectCount; i++) {
-            if (this.subjectName[i].equals(searchSubject)) {
+            if (this.subjectName[i].equals(searchSubject)) { 
                 System.out.printf(" - 학번: %s\t이름: %s\t학년: %d학년\t[%s] 학점: %s\n", 
-                        this.studentId, this.name, this.year, this.subjectName[i], this.letterGrades[i]);
+                        this.studentId, this.name, this.year, this.subjectName[i], this.Grades[i]);
                 return true; 
             }
         }
