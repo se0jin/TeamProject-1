@@ -13,186 +13,165 @@ import java.util.InputMismatchException;
  * @version (2026.05.07)
  */
 public class MyApp {
+    private static Scanner scan = new Scanner(System.in);
+
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int n = 0;  
-
-        System.out.print("처리할 학생 수를 입력하세요: ");
-        while (true) {
-            try {
-                n = scanner.nextInt();
-                if (n <= 0) {
-                    System.out.println("1 이상의 정수를 입력하세요.");
-                    continue;
-                }
-                break; 
-            } catch (InputMismatchException e) {
-                System.out.println("정수가 아닙니다. 다시 입력하세요.");
-                scanner.next(); 
-            }
-        }
-
+        // 학생 수 입력받기
+        int n = inputTotalStudents();
         Student[] students = new Student[n];
 
-        for (int i = 0; i < n; i++) {
+        // 학생들의 정보 입력받기
+        inputAllStudentData(students);
+
+        // 메인 메뉴 루프
+        runMainMenu(students);
+
+        scan.close();
+    }
+
+    /**
+     * 사용자로부터 처리할 학생 수를 입력받습니다. 
+     * 숫자가 아니거나 0 이하인 경우 예외 처리를 통해 다시 입력받습니다.
+     * @return 유효한 학생 수(1 이상)
+     */
+    private static int inputTotalStudents()
+    {
+        int n = 0;
+        while (true) {
             try {
-                System.out.println("\n--- " + (i + 1) + "번째 학생 정보 입력 ---");
-
-                System.out.print("학번: ");
-                String studentId = scanner.next();
-
-                System.out.print("이름: ");
-                String name = scanner.next();
-
-                System.out.print("학년(1~4): ");
-                int year = scanner.nextInt();
-                if (year < 1 || year > 4) {
-                    System.out.println("학년은 1~4 사이여야 합니다. 다시 입력하세요.");
-                    i--; 
-                    continue;
-                }
-
-                int subjectCount = 0;
-                while (true) {
-                    try {
-                        System.out.print("수강한 과목 수를 입력하세요: ");
-                        subjectCount = scanner.nextInt();
-                        if (subjectCount <= 0) {
-                            System.out.println("과목 수는 1 이상이어야 합니다. 다시 입력하세요.");
-                            continue;
-                        }
-                        break; 
-                    } catch (InputMismatchException e) {
-                        System.out.println("문자가 입력되었습니다. 숫자만 다시 입력하세요.");
-                        scanner.next(); 
-                    }
-                }
-
-                String[] subjectName = new String[subjectCount];
-                int[] score = new int[subjectCount];
-                int[] credit = new int[subjectCount];
-                boolean isInputValid = true;
-
-                for (int j = 0; j < subjectCount; j++) {
-                    System.out.print((j + 1) + "번째 과목의 [과목명] [점수] [이수학점]을 띄어쓰기로 구분하여 입력하세요 (예: 자바프로그래밍 95 3): ");
-                    subjectName[j] = scanner.next(); 
-                    score[j] = scanner.nextInt();    
-                    credit[j] = scanner.nextInt();   
-
-                    if (score[j] < 0 || score[j] > 100 || credit[j] <= 0) {
-                        System.out.println("점수는 0~100 사이, 이수학점은 1 이상이어야 합니다. 처음부터 다시 입력하세요.");
-                        isInputValid = false;
-                        break;
-                    }
-                }
-
-                if (!isInputValid) {
-                    i--;
-                    continue; 
-                }
-
-                students[i] = new Student(studentId, name, year, subjectCount, 
-                                            subjectName, score, credit);
-
+                System.out.print("처리할 학생 수를 입력하세요: ");
+                n = scan.nextInt();
+                if (n > 0) return n;
+                System.out.println("1 이상의 정수를 입력하세요.");
             } catch (InputMismatchException e) {
-                System.out.println("숫자만 입력하세요.");
-                scanner.next(); 
-                i--; 
-                continue;
+                System.out.println("정수가 아닙니다. 다시 입력하세요.");
+                scan.next();
             }
         }
+    }
 
-        while (true) {
-            System.out.println("\n=================================");
-            System.out.println("1. 전체 성적표 출력");
-            System.out.println("2. 과목별 학생 성적 조회");
-            System.out.println("3. 프로그램 종료");
-            System.out.print(">> 선택: ");
+    /**
+     * 지정된 학생 수만큼 반복하여 학생들의 기본 정보를 입력받고 배열에 저장합니다.
+     * @param students 학생 객체를 저장할 배열
+     */
+    private static void inputAllStudentData(Student[] students)
+    {
+        for (int i = 0; i < students.length; i++) {
+            try {
+                System.out.println("\n--- " + (i + 1) + "번째 학생 정보 입력 ---");
+                System.out.print("학번: "); String studentId = scan.next();
+                System.out.print("이름: "); String name = scan.next();
+                System.out.print("학년(1~4): "); int year = scan.nextInt();
 
-            int menuOption = scanner.nextInt();
-
-            if (menuOption == 1) {
-                System.out.println("\n정렬 방식을 선택하세요.");
-                System.out.println("1. 이름순 (가나다순)");
-                System.out.println("2. 성적순 (평점 높은 순)");
-                System.out.println("3. 학번순 (오름차순)");
-                System.out.print(">> 선택: ");
-
-                int sortOption = 1;
-                try {
-                    sortOption = scanner.nextInt();
-                } catch (InputMismatchException e) {
-                    System.out.println("잘못된 입력으로 기본값인 '이름순'으로 정렬합니다.");
-                    scanner.next();
+                if (year < 1 || year > 4) {
+                    System.out.println("학년 오류! 다시 입력하세요.");
+                    i--; continue;
                 }
 
-                for (int i = 0; i < students.length - 1; i++) {
-                    for (int j = 0; j < students.length - 1 - i; j++) {
-                        boolean shouldSwap = false;
-
-                        switch(sortOption) {
-                            case 1: 
-                                if (students[j].getName().compareTo(students[j+1].getName()) > 0) shouldSwap = true;
-                                break;
-                            case 2: 
-                                if (students[j].getAveragePoint() < students[j+1].getAveragePoint()) shouldSwap = true;
-                                break;
-                            case 3: 
-                                if (students[j].getStudentId().compareTo(students[j+1].getStudentId()) > 0) shouldSwap = true;
-                                break;
-                            default:
-                                if (students[j].getName().compareTo(students[j+1].getName()) > 0) shouldSwap = true;
-                        }
-
-                        if (shouldSwap) {
-                            Student temp = students[j];
-                            students[j] = students[j+1];
-                            students[j+1] = temp;
-                        }
-                    }
+                if (!inputSubjectDetails(students, i, studentId, name, year)) {
+                    i--; // 과목 점수 오류 시 해당 학생 재입력
                 }
-                int[] rank = new int[students.length];
+            } catch (InputMismatchException e) {
+                System.out.println("잘못된 입력입니다. 처음부터 다시 입력하세요.");
+                scan.next(); i--;
+            }
+        }
+    }
 
-                for (int i = 0; i < students.length; i++) {
-                    if (i == 0) {
-                        rank[i] = 1; // 첫번째는 무조건 1등
-                    } else {
-                        if (students[i].getAveragePoint() == students[i-1].getAveragePoint()) {
-                            rank[i] = rank[i-1]; // 평점 같으면 같은 순위
-                        } else {
-                            rank[i] = i + 1; // 다르면 현재 인덱스+1 이 순위
-                        }
-                    }
-                }
+    /**
+     * 학생의 수강 과목 수와 각 과목의 상세 정보(과목명, 점수, 학점)를 입력받습니다.
+     * 입력된 데이터가 유효하면 Student 객체를 생성하여 배열에 할당합니다.
+     * @param students 학생 배열
+     * @param index 현재 입력 중인 학생의 인덱스
+     * @param studentId 학번
+     * @param name 이름
+     * @param year 학년
+     * @return 데이터 유효성 검사 결과 (유효 시 true)
+     */
+    private static boolean inputSubjectDetails(Student[] students, int index, String studentId, String name, int year)
+    {
+        System.out.print("수강한 과목 수를 입력하세요: ");
+        int subjectCount = scan.nextInt();
 
-                System.out.println("\n=== 전체 학생 성적표 ===");
-                for (int i = 0; i < students.length; i++) {
-                    System.out.println("석차: " + rank[i] + "/" + students.length);
-                    students[i].printStudentInfo();
-                }
+        String[] subjectName = new String[subjectCount];
+        int[] score = new int[subjectCount];
+        int[] credit = new int[subjectCount];
+        boolean isInputValid = true;
 
-            } else if (menuOption == 2) {
-                System.out.print("조회할 과목명을 입력하세요: ");
-                String searchSubject = scanner.next();
+        for (int j = 0; j < subjectCount; j++) {
+            System.out.print((j + 1) + "번째 과목명 점수 학점: ");
+            subjectName[j] = scan.next();
+            score[j] = scan.nextInt();
+            credit[j] = scan.nextInt();
 
-                System.out.println("\n=== [" + searchSubject + "] 과목 수강 학생 성적 ===");
-                boolean isFound = false;
-
-                for (Student s : students) {
-                    if (s.printSingleSubjectInfo(searchSubject)) {
-                        isFound = true;
-                    }
-                }
-
-                if (!isFound) {
-                    System.out.println("해당 과목을 수강한 학생이 없습니다.");
-                }
-
-            } else if (menuOption == 3) {
-                System.out.println("프로그램을 종료합니다.");
-                scanner.close();
+            if (score[j] < 0 || score[j] > 100) {
+                isInputValid = false;
                 break;
             }
         }
+
+        if (isInputValid) {
+            students[index] = new Student(studentId, name, year, subjectCount, subjectName, score, credit);
+            return true;
+        } else {
+            System.out.println("점수 범위 오류(0~100)! 이 학생을 재입력합니다.");
+            return false;
+        }
+    }
+
+    /**
+     * 프로그램의 메인 메뉴를 출력하고 사용자의 선택에 따라 성적표 출력 또는 검색 기능을 실행합니다.
+     * @param students 데이터가 저장된 학생 배열
+     */
+    private static void runMainMenu(Student[] students)
+    {
+        while (true) {
+            System.out.println("\n1. 전체 성적표 | 2. 과목별 조회 | 3. 종료");
+            System.out.print(">> 선택: ");
+            int menuOption = scan.nextInt();
+
+            if (menuOption == 1) {
+                processSortAndPrint(students);
+            } else if (menuOption == 2) {
+                processSearch(students);
+            } else if (menuOption == 3) {
+                System.out.println("프로그램을 종료합니다.");
+                break;
+            }
+        }
+    }
+
+    /**
+     * 학생들을 평균 평점 기준 내림차순(성적순)으로 정렬(버블 정렬)하여 전체 성적표를 출력합니다.
+     * @param students 정렬 및 출력할 학생 배열
+     */
+    private static void processSortAndPrint(Student[] students)
+    {
+        for (int i = 0; i < students.length - 1; i++) {
+            for (int j = 0; j < students.length - 1 - i; j++) {
+                if (students[j].getAveragePoint() < students[j+1].getAveragePoint()) {
+                    Student temp = students[j];
+                    students[j] = students[j+1];
+                    students[j+1] = temp;
+                }
+            }
+        }
+        System.out.println("\n=== 전체 성적표 (성적순) ===");
+        for (Student s : students) s.printStudentInfo();
+    }
+
+    /**
+     * 사용자로부터 과목명을 입력받아 해당 과목을 수강한 학생들의 성적 정보를 검색하여 출력합니다.
+     * @param students 검색 대상 학생 배열
+     */
+    private static void processSearch(Student[] students)
+    {
+        System.out.print("조회할 과목명: ");
+        String target = scan.next();
+        boolean isFound = false;
+        for (Student s : students) {
+            if (s.printSingleSubjectInfo(target)) isFound = true;
+        }
+        if (!isFound) System.out.println("해당 과목 수강생이 없습니다.");
     }
 }
