@@ -131,13 +131,13 @@ public class MyApp {
                         boolean shouldSwap = false;
 
                         switch(sortOption) {
-                            case 1: 
+                            case 1: // 이름순
                                 if (students[j].getName().compareTo(students[j+1].getName()) > 0) shouldSwap = true;
                                 break;
-                            case 2: 
+                            case 2: //성적순
                                 if (students[j].getAveragePoint() < students[j+1].getAveragePoint()) shouldSwap = true;
                                 break;
-                            case 3: 
+                            case 3: //학번순
                                 if (students[j].getStudentId().compareTo(students[j+1].getStudentId()) > 0) shouldSwap = true;
                                 break;
                             default:
