@@ -14,23 +14,23 @@ import java.util.InputMismatchException;
  */
 public class MyApp {
     private static Scanner scan = new Scanner(System.in);
-    private static Subject[] globalSubjects;
+    private static Subject[] subject;
 
     public static void main(String[] args) {
-        setupGlobalSubjects();
+        SubjectList();
 
-        int n = inputStudentCount();
+        int n = StudentCount();
         Student[] students = new Student[n];
 
-        inputStudentData(students);
+        InputStudent(students);
         boolean isRunning = true;
         while (isRunning) {
-            int menuOption = displayMenuAndSelect();
+            int menuOption = Menu();
 
             if (menuOption == 1) {
-                printFullReport(students);
+                SortMenu(students);
             } else if (menuOption == 2) {
-                searchSubjectScore(students);
+                SearchSubject(students);
             } else if (menuOption == 3) {
                 students = addStudent(students);
             } else if (menuOption == 4) {
@@ -44,23 +44,21 @@ public class MyApp {
     }
 
     /**
-     * 메소드 예제 - 사용자에 맞게 주석을 바꾸십시오.
+     * 과목수 입력받아 배열 생성 후 과목 생성.
      *
-     * @param  y  메소드의 샘플 파라미터
-     * @return    x 와 y의 합
      */
-    private static void setupGlobalSubjects()   
+    private static void SubjectList()   
     {
         System.out.println("=== [과목 생성 메뉴] ===");
         System.out.print("이번 학기에 등록할 총 과목 수를 입력하세요: ");
         int count = scan.nextInt();
         scan.nextLine();
-        globalSubjects = new Subject[count];
+        subject = new Subject[count];
 
         for (int i = 0; i < count; i++) {
             System.out.print((i + 1) + "번째 과목명: ");
             String subName = scan.next();
-            globalSubjects[i] = new Subject(i + 1, subName);
+            subject[i] = new Subject(i + 1, subName);
         }
         System.out.println(">> 과목 등록이 완료되었습니다.\n");
     }
@@ -70,7 +68,7 @@ public class MyApp {
      * 숫자가 아니거나 0 이하인 경우 예외 처리를 통해 다시 입력받습니다.
      * @return 유효한 학생 수(1 이상)
      */
-    private static int inputStudentCount()
+    private static int StudentCount()
 
     {
         int n = 0;
@@ -94,8 +92,7 @@ public class MyApp {
      * @param students 학생 객체를 저장할 배열
      */
 
-    private static void inputStudentData(Student[] students)
-
+    private static void InputStudent(Student[] students)
     {
         for (int i = 0; i < students.length; i++) {
             try {
@@ -112,7 +109,7 @@ public class MyApp {
                 System.out.print("수강한 과목 수를 입력하세요: ");
                 int subCount = scan.nextInt();
 
-                if (!processSubjectInput(students, i, id, name, year, subCount)) {
+                if (!InputSubject(students, i, id, name, year, subCount)) {
                     i--; 
                 }
             } catch (InputMismatchException e) {
@@ -134,11 +131,11 @@ public class MyApp {
      * @return 데이터 유효성 검사 결과 (유효 시 true)
      */
 
-    private static boolean processSubjectInput(Student[] students, int i, String id, String name, int year, int subCount)
+    private static boolean InputSubject(Student[] students, int i, String id, String name, int year, int subCount)
     {
         System.out.println("[수강 과목 리스트]");
-        for (int k = 0; k < globalSubjects.length; k++) {
-            System.out.print(globalSubjects[k].id + "." + globalSubjects[k].name + " ");
+        for (int k = 0; k < subject.length; k++) {
+            System.out.print(subject[k].id + "." + subject[k].name + " ");
         }
 
         int[] selectedIds = new int[subCount];
@@ -153,12 +150,12 @@ public class MyApp {
 
         for (int j = 0; j < subCount; j++) {
             int subId = selectedIds[j];
-            if (subId < 1 || subId > globalSubjects.length) {
+            if (subId < 1 || subId > subject.length) {
                 System.out.println("\n오류: " + subId + "번 과목은 존재하지 않습니다. 다시 하세요.");
                 return false;
             }
 
-            subNames[j] = globalSubjects[subId - 1].name;
+            subNames[j] = subject[subId - 1].name;
 
             System.out.print("\n[" + subNames[j] + "]의 점수와 학점 입력(예: 95 3): ");
             scores[j] = scan.nextInt();
@@ -175,7 +172,7 @@ public class MyApp {
      * 프로그램의 메인 메뉴를 출력하고 사용자의 선택에 따라 성적표 출력 또는 검색 기능을 실행합니다.
      * @param students 데이터가 저장된 학생 배열
      */
-    private static int displayMenuAndSelect()
+    private static int Menu()
 
     {
         System.out.println("\n1. 전체 성적표 | 2. 과목 조회 | 3. 학생 추가 | 4. 종료");
@@ -184,12 +181,12 @@ public class MyApp {
     }
 
     /**
-     * 메소드 예제 - 사용자에 맞게 주석을 바꾸십시오.
+     * 학생 성적을 정렬하여 출력하는 메소드.
+     * 이름,성적,학번 중 선택해 정렬
      *
-     * @param  y  메소드의 샘플 파라미터
-     * @return    x 와 y의 합
+     * @param students 학생 배열
      */
-    private static void printFullReport(Student[] students)
+    private static void SortMenu(Student[] students)
     {
         System.out.print("정렬 기준(1.이름 2.성적 3.학번): ");
         int opt = scan.nextInt();
@@ -224,29 +221,28 @@ public class MyApp {
     }
 
     /**
-     * 메소드 예제 - 사용자에 맞게 주석을 바꾸십시오.
+     * 특정 과목을 수강하는 학생들의 성적을 조회하는 메소드.
      *
-     * @param  y  메소드의 샘플 파라미터
-     * @return    x 와 y의 합
+     * @param students 학생 배열
      */
-    private static void searchSubjectScore(Student[] students) {
+    private static void SearchSubject(Student[] students) {
         System.out.println("--- 과목별 성적 조회 ---");
-        for (int k = 0; k < globalSubjects.length; k++) {
-            System.out.print(globalSubjects[k].id + "." + globalSubjects[k].name + " ");
+        for (int k = 0; k < subject.length; k++) {
+            System.out.print(subject[k].id + "." + subject[k].name + " ");
         }
         System.out.print("조회할 과목의 번호를 선택하세요: ");
         int choice = scan.nextInt();
-        if (choice < 1 || choice > globalSubjects.length) {
+        if (choice < 1 || choice > subject.length) {
             System.out.println("해당 번호의 과목이 없습니다.");
             return;
         }
-        String target = globalSubjects[choice - 1].name;
+        String target = subject[choice - 1].name;
 
         System.out.println("=== [" + target + "] 수강생 성적 목록 ===");
         boolean isFound = false;
         for (int i = 0; i < students.length; i++) {
 
-            if (students[i].printSingleSubjectInfo(target)) {
+            if (students[i].printSubject(target)) {
                 isFound = true;
             }
         }
@@ -278,7 +274,7 @@ public class MyApp {
             System.out.print("수강한 과목 수를 입력하세요: ");
             int subCount = scan.nextInt();
 
-            if (processSubjectInput(newStudents, newIndex, id, name, year, subCount)) {
+            if (InputSubject(newStudents, newIndex, id, name, year, subCount)) {
                 System.out.println(">> 학생이 추가되었습니다.");
                 return newStudents;
             } else {

@@ -12,8 +12,8 @@ class Student {
     private String[] subjectName; //과목이름
     private int[] score; //점수
     private int[] credit; //과목별 학점
-    private double[] points; //과목별 평점
-    private String[] Grades; // 등급 배열
+    private double[] point; //과목별 평점
+    private String[] Grade; // 등급 배열
 
     private int totalCredit; //전체 이수 학점
     private double averagePoint; // 최종 평점평균
@@ -38,8 +38,8 @@ class Student {
         this.subjectName = subjectName;
         this.score = score;
         this.credit = credit;
-        this.points = new double[subjectCount];
-        this.Grades = new String [subjectCount];
+        this.point = new double[subjectCount];
+        this.Grade = new String [subjectCount];
         calcAvgPoint(); //평점.등급 계산
     }
 
@@ -88,11 +88,11 @@ class Student {
         double sumOfGradePoint = 0.0;
 
         for (int i = 0; i < this.subjectCount; i++) {
-            this.points[i] = scoreToPoint(this.score[i]);
-            this.Grades[i] = scoreToGrade(this.score[i]); 
+            this.point[i] = scoreToPoint(this.score[i]);
+            this.Grade[i] = scoreToGrade(this.score[i]); 
 
             this.totalCredit += this.credit[i];
-            sumOfGradePoint += (this.points[i] * this.credit[i]);
+            sumOfGradePoint += (this.point[i] * this.credit[i]);
         }
 
         if (this.totalCredit > 0) {
@@ -124,7 +124,7 @@ class Student {
 
         System.out.println("\n[과목별 성적]");
         for (int i = 0; i < this.subjectCount; i++) {
-            System.out.println(" - " + this.subjectName[i] + " : " + this.Grades[i]);
+            System.out.println(" - " + this.subjectName[i] + " : " + this.Grade[i]);
         }
 
         System.out.println("\n[전체 성적 처리 결과]");
@@ -140,14 +140,14 @@ class Student {
      * @param searchSubject 조회할 과목명
      * @return 과목 수강 여부 (수강 시 true)
      */
-    public boolean printSingleSubjectInfo(String searchSubject)
+    public boolean printSubject(String searchSubject)
     {
         for (int i = 0; i < this.subjectCount; i++) {
             if (this.subjectName[i].equals(searchSubject)) { 
                 System.out.print(" - 학번: " + this.studentId);
                 System.out.print("\t이름: " + this.name);
                 System.out.print("\t학년: " + this.year + "학년");
-                System.out.println("\t[" + this.subjectName[i] + "] 학점: " + this.Grades[i]);
+                System.out.println("\t[" + this.subjectName[i] + "] 학점: " + this.Grade[i]);
                 return true; 
             }
         }
