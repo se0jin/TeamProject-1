@@ -117,7 +117,7 @@ class Student {
     /**
      * 학생의 기본 정보와 과목별 등급, 최종 성적 처리 결과를 화면에 출력합니다.
      */
-    public void printStudentInfo()
+    public void printStudent()
     {
         System.out.println("--------------------------------------------------");
         System.out.println("학번: " + this.studentId + "\t이름: " + this.name + "\t학년: " + this.year + "학년");

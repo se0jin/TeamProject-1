@@ -13,14 +13,19 @@ import java.util.InputMismatchException;
  * @version (2026.05.07)
  */
 public class MyApp {
+    // [공통 데이터 변수]
     private static Scanner scan = new Scanner(System.in);
     private static Subject[] subject;
-
+    private static Student[] students;
+    private static int n;
+    private static String id, name;
+    private static int year, subCount;
+    private static int subId;
     public static void main(String[] args) {
         SubjectList();
 
         int n = StudentCount();
-        Student[] students = new Student[n];
+        students = new Student[n];
 
         InputStudent(students);
         boolean isRunning = true;
@@ -97,9 +102,9 @@ public class MyApp {
         for (int i = 0; i < students.length; i++) {
             try {
                 System.out.println("\n--- " + (i + 1) + "번째 학생 정보 입력 ---");
-                System.out.print("학번: "); String id = scan.next();
-                System.out.print("이름: "); String name = scan.next();
-                System.out.print("학년(1~4): "); int year = scan.nextInt();
+                System.out.print("학번: "); id = scan.next();
+                System.out.print("이름: "); name = scan.next();
+                System.out.print("학년(1~4): "); year = scan.nextInt();
 
                 if (year < 1 || year > 4) {
                     System.out.println("학년 오류! 다시 입력하세요.");
@@ -134,14 +139,16 @@ public class MyApp {
     private static boolean InputSubject(Student[] students, int i, String id, String name, int year, int subCount)
     {
         System.out.println("[수강 과목 리스트]");
+
         for (int k = 0; k < subject.length; k++) {
             System.out.print(subject[k].id + "." + subject[k].name + " ");
         }
 
-        int[] selectedIds = new int[subCount];
+        int[] subjectId = new int[subCount];
+
         System.out.print("\n수강한 과목 번호 " + subCount + "개를 띄어쓰기로 입력하세요: ");
         for (int j = 0; j < subCount; j++) {
-            selectedIds[j] = scan.nextInt(); 
+            subjectId[j] = scan.nextInt(); 
         }
 
         String[] subNames = new String[subCount];
@@ -149,7 +156,7 @@ public class MyApp {
         int[] credits = new int[subCount];
 
         for (int j = 0; j < subCount; j++) {
-            int subId = selectedIds[j];
+            int subId = subjectId[j];
             if (subId < 1 || subId > subject.length) {
                 System.out.println("\n오류: " + subId + "번 과목은 존재하지 않습니다. 다시 하세요.");
                 return false;
@@ -216,7 +223,7 @@ public class MyApp {
                 if (students[j].getAveragePoint() > students[i].getAveragePoint()) rank++;
             }
             System.out.print("[석차: " + rank + "/" + students.length + "] ");
-            students[i].printStudentInfo();
+            students[i].printStudent();
         }
     }
 
@@ -287,5 +294,4 @@ public class MyApp {
 
         return oldStudents; 
     }
-
 }
